@@ -1,37 +1,27 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React from 'react';
+import 'react-native-gesture-handler';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// שאר הייבואים...
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AuthStack from './navigation/AuthStack';
+import BottomTabNavigator from './navigation/BottomTabNavigator';
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+// import AuthStack from './navigation/AuthStack.tsx';
+// import BottomTabNavigator from './navigation/BottomTabNavigator.tsx';
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+const RootStack = createNativeStackNavigator();
 
-  if (!loaded) {
-    return null;
-  }
-
+const App = () => {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <NavigationContainer independent={true}>
+      <RootStack.Navigator screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name="AuthStack" component={AuthStack} />
+        <RootStack.Screen name="MainApp" component={BottomTabNavigator} />
+      </RootStack.Navigator>
+    </NavigationContainer>
   );
-}
+};
+
+export default App;
